@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="fa">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>افزودن توکن USDT به MetaMask</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      background-color: #f0f0f0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+    }
+    button {
+      background-color: #f6851b;
+      color: white;
+      border: none;
+      padding: 15px 30px;
+      font-size: 18px;
+      border-radius: 8px;
+      cursor: pointer;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    }
+    button:hover {
+      background-color: #e2761b;
+    }
+    .status {
+      margin-top: 20px;
+      color: red;
+    }
+  </style>
+</head>
+<body>
+  <h2>افزودن توکن USDT به کیف پول MetaMask</h2>
+  <button onclick="addToken()">افزودن توکن</button>
+  <p class="status" id="status"></p>
+
+  <script>
+    async function addToken() {
+      const tokenAddress = "0x184B8F455c2eC08B5E290F1fF0c8A630C242Aeb4";
+      const tokenSymbol = "USDT";
+      const tokenDecimals = 18;
+      const tokenImage = "https://gateway.pinata.cloud/ipfs/bafkreickdhlzaeajcyqpxopdolo57rfzkttbrlyfujo2sjszc22z3zohdu";
+
+      if (!window.ethereum || !window.ethereum.isMetaMask) {
+        document.getElementById("status").textContent = "MetaMask نصب نیست یا شناسایی نشد.";
+        return;
+      }
+
+      try {
+        const wasAdded = await window.ethereum.request({
+          method: 'wallet_watchAsset',
+          params: {
+            type: 'ERC20',
+            options: {
+              address: tokenAddress,
+              symbol: tokenSymbol,
+              decimals: tokenDecimals,
+              image: tokenImage,
+            },
+          },
+        });
+
+        document.getElementById("status").textContent = wasAdded
+          ? "✅ توکن با موفقیت افزوده شد."
+          : "❌ افزودن توکن توسط کاربر لغو شد.";
+      } catch (error) {
+        console.error(error);
+        document.getElementById("status").textContent = "⚠️ خطا در افزودن توکن.";
+      }
+    }
+  </script>
+</body>
+</html>
